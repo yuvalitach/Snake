@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:id="@+id/activity_login"
+    android:background="@drawable/green_background"
+    tools:context=".MainActivityLogin">
+
+    <ImageView
+        android:id="@+id/login_IMG_background"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:src="@drawable/anaconda" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Snake Game"
+        android:textSize="80dp"
+        android:layout_margin="5dp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:fontFamily="@font/poisonlovepersonalusejevlo"
+        android:layout_gravity="center_horizontal"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            app:startIconDrawable="@drawable/ic_baseline_supervised_user_circle_24"
+            app:boxStrokeColor="@color/black"
+            app:boxStrokeWidth="3dp"
+            android:layout_gravity="center"
+            android:textColorHint="@color/black"
+            app:hintTextColor="@color/black"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/main_EDT_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#F6F3EF"
+                android:hint="Name"
+                android:textStyle="bold" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="10dp"
+            app:startIconDrawable="@android:drawable/ic_dialog_email"
+            app:boxStrokeColor="@color/black"
+            app:boxStrokeWidth="3dp"
+            android:layout_gravity="center"
+            android:textColorHint="@color/black"
+            app:hintTextColor="@color/black"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/main_EDT_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#F6F3EF"
+                android:hint="Mail"
+                android:textStyle="bold" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/main_BTN_sign_in"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="Play"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:cornerRadius="30dp"
+            app:strokeWidth="2dp"
+
+            android:backgroundTint="#F6F3EF" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/main_BTN_PlayPremium"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="Play premuim"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:cornerRadius="30dp"
+            app:strokeWidth="2dp"
+            android:backgroundTint="#F6F3EF" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/main_BTN_premium"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="Sign up premium"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:cornerRadius="30dp"
+            app:strokeWidth="2dp"
+            android:backgroundTint="#F6F3EF" />
+
+    </LinearLayout>
+
+</LinearLayout>

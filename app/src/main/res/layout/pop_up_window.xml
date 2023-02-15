@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    tools:context=".MainActivityLogin">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/account_EDT_bank"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:hint="Enter Password"
+        android:padding="16dp"
+        android:textColorHint="@color/white"
+        app:boxBackgroundColor="#ABE6ED"
+        app:boxCornerRadiusBottomEnd="30dp"
+        app:boxCornerRadiusBottomStart="30dp"
+        app:boxCornerRadiusTopEnd="30dp"
+        app:boxCornerRadiusTopStart="30dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/popup_LBL_ID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="30"
+            android:imeOptions="actionDone"
+            android:textSize="20sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="85dp">
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/popup_BTN_save"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/account_EDT_bank"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:text="GO!"
+        android:textColor="#ABE6ED"
+        app:cornerRadius="50dp"
+        app:strokeColor="#ABE6ED" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/popup_BTN_cancel"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/account_EDT_bank"
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:text="Cancel"
+        android:textColor="#ABE6ED"
+        app:cornerRadius="50dp"
+        app:strokeColor="#ABE6ED" />
+    </LinearLayout>
+
+</RelativeLayout>
