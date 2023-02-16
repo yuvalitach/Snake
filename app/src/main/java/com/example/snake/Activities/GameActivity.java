@@ -1,8 +1,7 @@
-package com.example.snake;
+package com.example.snake.Activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -24,24 +23,21 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
 
-import com.example.snake.Models.MyDataManager;
 import com.example.snake.Models.Sensors;
-import com.example.snake.Models.SensorsEnum;
 import com.example.snake.Models.SnakePoints;
 import com.example.snake.Models.User;
+import com.example.snake.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.installations.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.UUID;
 
 
 public class GameActivity extends AppCompatActivity implements SurfaceHolder.Callback {
@@ -82,23 +78,16 @@ public class GameActivity extends AppCompatActivity implements SurfaceHolder.Cal
     private Paint pointColor = null;
 
     //sensors
-    public static final String SENSOR_TYPE = "SENSOR_TYPE";
-    private int sensorType;
+    private boolean sensorType;
     private Sensors mySensors;
     private SensorManager sensorManager;
 
+    private String email;
+
 
     //finals
-    public static final String NAME = "NAME";
     public static final String EMAIL = "EMAIL";
     public static final String PREMIUM = "PREMIUM";
-    public static final String PASSWORD = "PASSWORD";
-    private User userToStore;
-
-    //DB
-    private final MyDataManager dataManager = MyDataManager.getInstance();
-    private final FirebaseDatabase realtimeDB = dataManager.getRealTimeDB();
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -120,10 +109,8 @@ public class GameActivity extends AppCompatActivity implements SurfaceHolder.Cal
         //adding callback to surfaceView
         surfaceView.getHolder().addCallback(this);
 
-        User user = new User().setEmail("test");
-
         //sensors
-        if (sensorType == SensorsEnum.withSensors.getValue()) {
+        if (sensorType) {
             initSensors();
             mySensors.getSensorManager().registerListener(accSensorEventListener, mySensors.getAccSensor(), SensorManager.SENSOR_DELAY_NORMAL);
             leftBtn.setVisibility(View.INVISIBLE);
@@ -302,7 +289,7 @@ public class GameActivity extends AppCompatActivity implements SurfaceHolder.Cal
                     timer.purge();
                     timer.cancel();
 
-                    checkIfDBContainUser(userToStore, score);
+                    SaveScore(score);
                     //show game over dialog
                     AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
                     builder.setMessage("Your score = " + score);
@@ -413,27 +400,9 @@ public class GameActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
     private void getDataFromLogin() {
         Bundle bundle = getIntent().getExtras();
-        sensorType = bundle.getInt(SENSOR_TYPE);
-        String email = bundle.getString(EMAIL).replace(".",",");
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference.child("users").child(email).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                 userToStore = dataSnapshot.getValue(User.class);
-                }
-                else {
-                    userToStore = new User();
-                    userToStore.setName(bundle.getString(NAME)).setPremium(bundle.getBoolean(PREMIUM)).setEmail(bundle.getString(EMAIL)).setPassword(bundle.getString(PASSWORD));
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Handle error
-            }
-        });
-        }
+        sensorType = bundle.getBoolean(PREMIUM);
+        email = bundle.getString(EMAIL);
+    }
 
     //sensors
     private void initSensors() {
@@ -468,50 +437,49 @@ public class GameActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
     };
 
-//    private void checkIfDBContainUser(User userToStore, int score) {
-//        //String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-//        DatabaseReference userNameRef = rootRef.child("Users").child(userToStore.getEmail().replace(".",",")).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                if (!snapshot.exists()) {
-//                    rootRef.child("Users").child(userToStore.getEmail()).setValue(userToStore);
-//                } else {
-//                    userToStore.getRecords().add(score);
-//                    rootRef.child("Users").child(userToStore.getEmail()).setValue(userToStore);
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//
-//    }
-
-    private void checkIfDBContainUser(User userToStore, int score){
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        rootRef.child("users").child(userToStore.getEmail().replace(".",",")).addListenerForSingleValueEvent(new ValueEventListener() {
+    private void SaveScore(int score){
+        // Retrieve the User object from the Firebase Realtime Database
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(email.replace(".",","));
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                    // save user data
-                    userToStore.getRecords().add(score);
-                    rootRef.child("users").child(userToStore.getEmail().replace(".",",")).setValue(userToStore);
-                }
-                else {
-                    userToStore.getRecords().add(score);
-                    rootRef.child("users").child(userToStore.getEmail().replace(".",",")).setValue(userToStore);
-                }
+                User user = dataSnapshot.getValue(User.class);
+
+                // Update the user's records list with a new value
+                // Add the new record to the local list
+                user.getRecords().add(score);
+
+                // Update the list in the Firebase Realtime Database
+                userRef.child("records").setValue( user.getRecords());
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // handle error
+                Log.w("ttt", "getUser:onCancelled", databaseError.toException());
             }
         });
+
+
+        //        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+//        rootRef.child("users").child(email.replace(".",",")).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                if (!dataSnapshot.exists()) {
+//                    // save user data
+//                    userToStore.getRecords().add(score);
+//                    rootRef.child("users").child(userToStore.getEmail().replace(".",",")).setValue(userToStore);
+//                }
+//                else {
+//                    userToStore.getRecords().add(score);
+//                    rootRef.child("users").child(userToStore.getEmail().replace(".",",")).setValue(userToStore);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                // handle error
+//            }
+//        });
     }
 
 }

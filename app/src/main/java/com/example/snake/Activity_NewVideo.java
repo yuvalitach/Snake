@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
 
-public class Activity_VideoNew extends AppCompatActivity {
+public class Activity_NewVideo extends AppCompatActivity {
 
     public static final String TAG = "PTTT_Activity_VideoNew";
 
