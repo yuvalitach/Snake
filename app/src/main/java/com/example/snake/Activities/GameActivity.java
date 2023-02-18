@@ -1,7 +1,6 @@
 package com.example.snake.Activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,7 +11,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -21,11 +19,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
 
-import com.example.snake.GameOverActivity;
 import com.example.snake.Models.Sensors;
 import com.example.snake.Models.SnakePoints;
 import com.example.snake.Models.User;
@@ -469,14 +465,4 @@ public class GameActivity extends AppCompatActivity implements SurfaceHolder.Cal
             }
         });
     }
-
-//    //save the state of game
-//    @Override
-//    protected void onSaveInstanceState(@NonNull Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putInt("score", score);
-//        outState.getBoolean(PREMIUM);
-//        email = bundle.getString(EMAIL);
-//
-//    }
 }

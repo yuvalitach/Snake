@@ -7,33 +7,34 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="@drawable/green_background"
-    tools:context=".GameOverActivity">
+    tools:context=".Activities.GameOverActivity">
 
     <ImageView
         android:id="@+id/login_IMG_background"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_width="100dp"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
         android:src="@drawable/anaconda" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
         android:layout_gravity="center_horizontal"
         android:fontFamily="@font/poisonlovepersonalusejevlo"
         android:text="Game Over"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="80dp" />
+        android:textSize="55dp" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="2"
         app:cardElevation="10dp"
         app:cardCornerRadius="20dp"
-        app:cardMaxElevation="12dp"
-        app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true"
         android:layout_margin="8dp">
 
@@ -72,49 +73,34 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
-                    android:layout_marginStart="10dp"
                     android:id="@+id/Play_again_BTN"
-                    style="@style/Widget.Material3.FloatingActionButton.Large.Primary"
+                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     app:cornerRadius="20dp"
-                    android:layout_height="55dp"
+                    android:layout_marginRight="10dp"
                     android:backgroundTint="@color/green"
-                    app:strokeColor="@color/black"
                     app:strokeWidth="3dp"
-                    android:drawablePadding="10dp"
-                    android:paddingLeft="20dp"
                     android:text="Play again"
-                    android:textAlignment="textStart"
-                    android:textAllCaps="false"
                     app:icon="@drawable/restart"
                     app:iconSize="@dimen/fab_margin" />
 
 
-
                 <com.google.android.material.button.MaterialButton
-                    android:layout_marginStart="80dp"
                     android:id="@+id/Purchase_life_BTN"
-                    style="@style/Widget.Material3.FloatingActionButton.Large.Primary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="55dp"
-                    app:strokeWidth="3dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     app:cornerRadius="20dp"
                     android:backgroundTint="@color/green"
-                    android:drawablePadding="10dp"
-                    android:paddingLeft="20dp"
+                    app:strokeWidth="3dp"
                     android:text="Buy life 10$"
-                    android:textAlignment="textStart"
-                    android:textAllCaps="false"
                     app:icon="@drawable/heart"
                     app:iconSize="@dimen/fab_margin" />
-
-
-
 
             </LinearLayout>
 
@@ -122,5 +108,10 @@
 
     </com.google.android.material.card.MaterialCardView>
 
+    <FrameLayout
+        android:id="@+id/main_LAY_banner"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"/>
 
 </LinearLayout>

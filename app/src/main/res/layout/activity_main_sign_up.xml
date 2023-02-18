@@ -106,10 +106,9 @@
             android:id="@+id/premium_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_gravity="center"
             android:textSize="18dp"
-            android:text="Premium Account" />
+            android:text="Premium Account"
+            android:layoutDirection="ltr"/>
 
 
         <com.google.android.material.button.MaterialButton

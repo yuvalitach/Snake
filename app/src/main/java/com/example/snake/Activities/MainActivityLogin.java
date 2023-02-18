@@ -1,9 +1,14 @@
 package com.example.snake.Activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
@@ -18,6 +23,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,11 +31,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 public class MainActivityLogin extends AppCompatActivity {
 
     MaterialButton btnSignIn;
     TextInputEditText edtPass, edtEmail;
-    TextView signUpTv;
+    TextView signUpTv, aboutTv;
     private Bundle bundle;
     private FrameLayout main_LAY_banner;
     public static final String PASSWORD = "PASSWORD";
@@ -69,6 +78,14 @@ public class MainActivityLogin extends AppCompatActivity {
                     finish();
             }
         });
+
+        aboutTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openHtmlTextDialog(MainActivityLogin.this, "about.html");
+            }
+        });
+
     }
 
     private void checkIfDBContainUser(String email, String password){
@@ -105,6 +122,7 @@ public class MainActivityLogin extends AppCompatActivity {
         edtPass = findViewById(R.id.main_EDT_password);
         edtEmail = findViewById(R.id.main_EDT_email);
         main_LAY_banner = findViewById(R.id.main_LAY_banner);
+        aboutTv = findViewById(R.id.textViewAbout);
     }
 
     private void showBanner() {
@@ -132,5 +150,35 @@ public class MainActivityLogin extends AppCompatActivity {
         // Step 3 - Get adaptive ad size and return for setting on the ad view.
         return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth);
     }
+
+    public static void openHtmlTextDialog(Activity activity, String fileNameInAssets) {
+        String str = "";
+        InputStream is = null;
+
+        try {
+            is = activity.getAssets().open(fileNameInAssets);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            str = new String(buffer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(activity);
+        materialAlertDialogBuilder.setPositiveButton("Close", null);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            materialAlertDialogBuilder.setMessage(Html.fromHtml(str, Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            materialAlertDialogBuilder.setMessage(Html.fromHtml(str));
+        }
+
+        AlertDialog al = materialAlertDialogBuilder.show();
+        TextView alertTextView = al.findViewById(android.R.id.message);
+        alertTextView.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
 }
 

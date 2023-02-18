@@ -1,12 +1,18 @@
 package com.example.snake.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.snake.Models.User;
@@ -14,9 +20,13 @@ import com.example.snake.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class MainActivitySignUp extends AppCompatActivity {
 
@@ -24,6 +34,7 @@ public class MainActivitySignUp extends AppCompatActivity {
     CheckBox isPremium;
     TextInputEditText edtName, edtEmail, edtPassword;
     private Bundle bundle;
+    TextView textViewTermsOfUse, textViewPrivacyPolicy;
 
 
 
@@ -46,6 +57,20 @@ public class MainActivitySignUp extends AppCompatActivity {
 
             }
         });
+
+        textViewTermsOfUse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openHtmlTextDialog(MainActivitySignUp.this, "terms_of_use.html");
+            }
+        });
+        textViewPrivacyPolicy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openHtmlTextDialog(MainActivitySignUp.this, "privacy_policy.html");
+            }
+        });
+
     }
 
     private void saveDataToDatabase(User user) {
@@ -77,5 +102,36 @@ public class MainActivitySignUp extends AppCompatActivity {
         edtPassword = findViewById(R.id.main_EDT_password);
         isPremium = findViewById(R.id.premium_account);
         btnSignUp = findViewById(R.id.btn_sign_up);
+        textViewPrivacyPolicy = findViewById(R.id.textViewPrivacyPolicy);
+        textViewTermsOfUse = findViewById(R.id.textViewTermsOfUse);
+    }
+
+    public static void openHtmlTextDialog(Activity activity, String fileNameInAssets) {
+        String str = "";
+        InputStream is = null;
+
+        try {
+            is = activity.getAssets().open(fileNameInAssets);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            str = new String(buffer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(activity);
+        materialAlertDialogBuilder.setPositiveButton("Close", null);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            materialAlertDialogBuilder.setMessage(Html.fromHtml(str, Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            materialAlertDialogBuilder.setMessage(Html.fromHtml(str));
+        }
+
+        AlertDialog al = materialAlertDialogBuilder.show();
+        TextView alertTextView = al.findViewById(android.R.id.message);
+        alertTextView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }
