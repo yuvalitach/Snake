@@ -36,6 +36,7 @@ public class GameOverActivity extends AppCompatActivity {
     TextView scoreTv;
     private FrameLayout main_LAY_banner;
     private RewardedAd mRewardedAd;
+    private boolean premium;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,19 +47,28 @@ public class GameOverActivity extends AppCompatActivity {
         getDataBundle = getIntent().getExtras();
         scoreTv.setText("Your score: "+getDataBundle.getInt(SCORE));
         loadVideoAd();
-        showBanner();
+
+        premium = getDataBundle.getBoolean(PREMIUM);
+        if (!premium)
+            showBanner();
+
 
         btnPlayAgain.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            showVideoAd();
-        }
+            if (!premium) {
+                showVideoAd();
+            }
+            else {
+                startGameActivity();
+            }
+            }
     });
 
         btnPurchaseLife.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                bundle.putBoolean(GameActivity.PREMIUM,getDataBundle.getBoolean(PREMIUM));
+                bundle.putBoolean(GameActivity.PREMIUM,premium);
                 bundle.putString(GameActivity.EMAIL,getDataBundle.getString(EMAIL));
                 bundle.putInt(GameActivity.SCORE,getDataBundle.getInt(SCORE));
                 Intent intent = new Intent(GameOverActivity.this, GameActivity.class);
@@ -144,7 +154,18 @@ public class GameOverActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
 
+//                startGameActivity();
             }
         });
+    }
+
+    private void startGameActivity (){
+        bundle.putBoolean(GameActivity.PREMIUM,getDataBundle.getBoolean(PREMIUM));
+        bundle.putString(GameActivity.EMAIL,getDataBundle.getString(EMAIL));
+        Intent intent = new Intent(GameOverActivity.this, GameActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+        finish();
+
     }
 }
