@@ -2,6 +2,7 @@ package com.example.snake.Activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,6 +12,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -23,6 +25,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
 
+import com.example.snake.GameOverActivity;
 import com.example.snake.Models.Sensors;
 import com.example.snake.Models.SnakePoints;
 import com.example.snake.Models.User;
@@ -38,7 +41,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-
 
 public class GameActivity extends AppCompatActivity implements SurfaceHolder.Callback {
 
@@ -81,13 +83,13 @@ public class GameActivity extends AppCompatActivity implements SurfaceHolder.Cal
     private boolean sensorType;
     private Sensors mySensors;
     private SensorManager sensorManager;
-
     private String email;
-
-
+    private User user; //user that play now
     //finals
     public static final String EMAIL = "EMAIL";
     public static final String PREMIUM = "PREMIUM";
+    public static final String SCORE = "SCORE";
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -128,7 +130,6 @@ public class GameActivity extends AppCompatActivity implements SurfaceHolder.Cal
                     if (!movingPosition.equals("bottom")) {
                         movingPosition = "top";
                         Log.d("pttt", "my");
-
                     }
                 }
             });
@@ -182,15 +183,15 @@ public class GameActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
     }
 
-    private void init() {
+    public void init() {
 
         //clear snake point / snake length
         snakePointsList.clear();
         //set score as 0
-        scoreTv.setText("0");
+        scoreTv.setText(Integer.toString(score));
 
         //make score 0
-        score = 0;
+        //score = 0;
 
         //setting default moving position
         movingPosition = "right";
@@ -290,26 +291,37 @@ public class GameActivity extends AppCompatActivity implements SurfaceHolder.Cal
                     timer.cancel();
 
                     SaveScore(score);
-                    //show game over dialog
-                    AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
-                    builder.setMessage("Your score = " + score);
-                    builder.setTitle("Game Over");
-                    builder.setCancelable(false);
-                    builder.setPositiveButton("Start Again", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //restart game / re-init data
-                            init();
-                        }
-                    });
 
-                    //timer runs in backround so we need to show dialog on main thread
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            builder.show();
-                        }
-                    });
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(GameOverActivity.SCORE, score);
+                    bundle.putBoolean(GameOverActivity.PREMIUM,sensorType);
+                    bundle.putString(GameOverActivity.EMAIL,email);
+
+                    Intent intent = new Intent(GameActivity.this, GameOverActivity.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    finish();
+
+//                    //show game over dialog
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
+//                    builder.setMessage("Your score = " + score);
+//                    builder.setTitle("Game Over");
+//                    builder.setCancelable(false);
+//                    builder.setPositiveButton("Start Again", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            //restart game / re-init data
+//                            init();
+//                        }
+//                    });
+//
+//                    //timer runs in backround so we need to show dialog on main thread
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            builder.show();
+//                        }
+//                    });
                 } else {
                     canvas = new Canvas();
                     //lock canvas on surfaceHolder to draw on it
@@ -402,6 +414,7 @@ public class GameActivity extends AppCompatActivity implements SurfaceHolder.Cal
         Bundle bundle = getIntent().getExtras();
         sensorType = bundle.getBoolean(PREMIUM);
         email = bundle.getString(EMAIL);
+        score = bundle.getInt(SCORE);
     }
 
     //sensors
@@ -428,13 +441,10 @@ public class GameActivity extends AppCompatActivity implements SurfaceHolder.Cal
                 movingPosition = "bottom";
             }
         }
-
-
         @Override
         public void onAccuracyChanged(Sensor sensor, int i) {
             Log.d("pttt", "onAccuracyChanged");
         }
-
     };
 
     private void SaveScore(int score){
@@ -443,7 +453,7 @@ public class GameActivity extends AppCompatActivity implements SurfaceHolder.Cal
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
+                user = dataSnapshot.getValue(User.class);
 
                 // Update the user's records list with a new value
                 // Add the new record to the local list
@@ -458,28 +468,15 @@ public class GameActivity extends AppCompatActivity implements SurfaceHolder.Cal
                 Log.w("ttt", "getUser:onCancelled", databaseError.toException());
             }
         });
-
-
-        //        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-//        rootRef.child("users").child(email.replace(".",",")).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                if (!dataSnapshot.exists()) {
-//                    // save user data
-//                    userToStore.getRecords().add(score);
-//                    rootRef.child("users").child(userToStore.getEmail().replace(".",",")).setValue(userToStore);
-//                }
-//                else {
-//                    userToStore.getRecords().add(score);
-//                    rootRef.child("users").child(userToStore.getEmail().replace(".",",")).setValue(userToStore);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                // handle error
-//            }
-//        });
     }
 
+//    //save the state of game
+//    @Override
+//    protected void onSaveInstanceState(@NonNull Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putInt("score", score);
+//        outState.getBoolean(PREMIUM);
+//        email = bundle.getString(EMAIL);
+//
+//    }
 }
